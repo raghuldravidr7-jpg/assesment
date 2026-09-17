@@ -1,22 +1,19 @@
 pipeline {
    agent any
-   parameters {
-       choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Select the deploy')
-   }
    stages {
       stage('Checkout') {
          steps {
             git branch: 'main', url: 'https://github.com/raghuldravidr7-jpg/assesment.git'
          }
       }
-      stage('Show Parameter') {
+      stage('Generate Report') {
          steps {
-            echo "Selected environment: ${params.ENVIRONMENT}"
+            bat 'python app.py'
          }
       }
-      stage('Build for Environment') {
+      stage('Archive Report') {
          steps {
-            echo "Building the application for the ${params.ENVIRONMENT} environment..."
+            archiveArtifacts artifacts: 'report.txt', fingerprint: true
          }
       }
    }
